@@ -71,6 +71,33 @@ router.route('/learner/feedback/get/:id').get((req, res) => {
     }
 });
 
+// Retreive all the Courses
+router.route('/learner/course/getAll').get((req, res) => {
+    try {
+        prisma.course.findMany({
+            include: {
+                module: {
+                    include: {
+                        resources: true
+                    }
+                },
+                feedback: true,
+                payment: true,
+                enrollment: true
+            }
+        }).then((course) => {
+            if (course.length > 0) {
+                res.status(200).json({ status: true, message: "Courses found", courses: course, code: "200" });
+            } else {
+                res.status(404).json({ status: false, message: "Courses not found", code: "404" });
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ status: false, message: "Error while fetching courses", code: "500" });
+        console.log("Error while fetching course", error);
+    }
+});
+
 // Function for Retreive only the specific Courses based on the userid
 router.route('/learner/course/get/:id').get((req, res) => {
     const userId = req.params.id;
