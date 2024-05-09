@@ -71,4 +71,32 @@ router.route('/learner/feedback/get/:id').get((req, res) => {
     }
 });
 
+// Function for Retreive only the specific Courses based on the userid
+router.route('/learner/course/get/:id').get((req, res) => {
+    const userId = req.params.id;
+    try {
+        prisma.enrollment.findMany({
+            where: {
+                userId: userId,
+            },
+            include: {
+                course: true
+            }
+        }).then((enrollments) => {
+            if (enrollments.length > 0) {
+                // Extract courses from enrollments
+                const courses = enrollments.map(enrollment => enrollment.course);
+                res.status(200).json({ status: true, message: "Courses found", courses: courses, code: "200" });
+            } else {
+                res.status(404).json({ status: false, message: "Courses not found", code: "404" });
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({ status: false, message: "Error while fetching courses", code: "500" });
+        console.log("Error while fetching course", error);
+    }
+});
+
+
 module.exports = router;
