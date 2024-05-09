@@ -154,4 +154,29 @@ router.route('/learner/user/update/:id').patch((req, res) => {
     }
 });
 
+
+
+// Function for Retreive only the specific user based on the id
+router.route('/learner/user/get/:id').get((req, res) => {
+    const _id = req.params.id
+    try {
+        prisma.user.findUnique({
+            where: {
+                id: _id,
+            },
+        }).then((data) => {
+            if (data) {
+                res.status(200).json({ status: true, message: "User found", user: data, role: data.Role, code: "200" })
+            } else {
+                res.status(404).json({ status: false, message: "User not found", code: "404" });
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({ status: false, message: "Error while fetching user", code: "500" });
+        console.log("Error while fetching user", error);
+    }
+});
+
+
 module.exports = router;
