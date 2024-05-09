@@ -59,15 +59,15 @@ router.route('/learner/feedback/get/:id').get((req, res) => {
             }
         }).then((data) => {
             if (data) {
-                res.status(200).json({ status: true, message: "User found", user: data, role: data.Role, code: "200" })
+                res.status(200).json({ status: true, message: "Feedback found", user: data, role: data.Role, code: "200" })
             } else {
-                res.status(404).json({ status: false, message: "User not found", code: "404" });
+                res.status(404).json({ status: false, message: "Feedback not found", code: "404" });
             }
         });
 
     } catch (error) {
-        res.status(500).json({ status: false, message: "Error while fetching user", code: "500" });
-        console.log("Error while fetching user", error);
+        res.status(500).json({ status: false, message: "Error while fetching feedback", code: "500" });
+        console.log("Error while fetching feedback", error);
     }
 });
 
