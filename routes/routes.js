@@ -125,5 +125,58 @@ router.route('/learner/course/get/:id').get((req, res) => {
     }
 });
 
+router.route('/learner/user/update/:id').patch((req, res) => {
+    const _id = req.params.id
+    const data = {
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        phoneNumber: req.body.phoneNumber,
+        profile_img: req.body.profile_img,
+    }
+
+    try {
+        prisma.user.update({
+            where: {
+                id: _id
+            },
+            data
+        }).then((data) => {
+            if (data) {
+                res.status(200).json({ status: true, message: "User Updated Sucessfully", data: data, role: data.Role, code: "200" })
+            }
+            else {
+                res.status(404).json({ status: false, message: "User not found", code: "404" })
+            }
+        })
+    } catch (error) {
+        res.status(500).json({ status: false, message: "Error occured while updating", code: "500" })
+    }
+});
+
+
+
+// Function for Retreive only the specific user based on the id
+router.route('/learner/user/get/:id').get((req, res) => {
+    const _id = req.params.id
+    try {
+        prisma.user.findUnique({
+            where: {
+                id: _id,
+            },
+        }).then((data) => {
+            if (data) {
+                res.status(200).json({ status: true, message: "User found", user: data, role: data.Role, code: "200" })
+            } else {
+                res.status(404).json({ status: false, message: "User not found", code: "404" });
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({ status: false, message: "Error while fetching user", code: "500" });
+        console.log("Error while fetching user", error);
+    }
+});
+
 
 module.exports = router;
