@@ -125,6 +125,7 @@ router.route('/learner/course/get/:id').get((req, res) => {
     }
 });
 
+// Update user information
 router.route('/learner/user/update/:id').patch((req, res) => {
     const _id = req.params.id
     const data = {
@@ -153,8 +154,6 @@ router.route('/learner/user/update/:id').patch((req, res) => {
         res.status(500).json({ status: false, message: "Error occured while updating", code: "500" })
     }
 });
-
-
 
 // Function for Retreive only the specific user based on the id
 router.route('/learner/user/get/:id').get((req, res) => {
